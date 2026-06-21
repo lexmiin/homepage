@@ -43,5 +43,6 @@
     "remark-gfm": "^4.0.1",
     "sass": "^1.98.0",
     "typescript": "5.9.3"
-  }
+  },
+  "packageManager": "pnpm@10.14.0"
 }
