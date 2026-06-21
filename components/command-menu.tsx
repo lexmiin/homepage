@@ -61,7 +61,7 @@ const CommandMenu: React.FC = () => {
       {
         name: 'GitHub',
         icon: <GitHubIcon />,
-        cb: externalLink('https://github.com/lex-unix')
+        cb: externalLink('https://github.com/lexmiin')
       }
     ],
     [router]

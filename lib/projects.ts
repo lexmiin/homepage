@@ -2,7 +2,7 @@ export const projects = [
   {
     name: 'Goship',
     description: 'Tool to simplify deployment, rollback and server setup',
-    href: 'https://github.com/lex-unix/go-ship',
+    href: 'https://github.com/lexmiin/go-ship',
     year: 2024
   },
   {
@@ -27,7 +27,7 @@ export const projects = [
   {
     name: 'Pravda',
     description: 'Ukrainian news extension for Raycast',
-    href: 'https://github.com/lex-unix/pravda-extension',
+    href: 'https://github.com/lexmiin/pravda-extension',
     year: 2022
   },
   {
