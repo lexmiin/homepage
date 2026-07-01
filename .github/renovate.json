@@ -1,0 +1,28 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "automergeType": "pr",
+  "automergeStrategy": "rebase",
+  "timezone": "Europe/Kyiv",
+  "schedule": ["* * * * 5"],
+  "lockFileMaintenance": {
+    "enabled": true
+  },
+  "packageRules": [
+    {
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "pin",
+        "digest",
+        "lockFileMaintenance"
+      ],
+      "automerge": true
+    },
+    {
+      "description": "Group lockfile maintenance updates",
+      "matchUpdateTypes": ["lockFileMaintenance"],
+      "groupName": "lockfile maintenance"
+    }
+  ]
+}
