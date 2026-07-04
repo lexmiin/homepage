@@ -1,0 +1,206 @@
+.command-input {
+  display: flex;
+  align-items: center;
+}
+
+.command-input__button {
+  margin-right: 16px;
+  margin-left: 16px;
+  background: var(--grayA3);
+  border-radius: 4px;
+  padding: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  color: var(--gray10);
+  transition: color 150ms ease;
+
+  &:hover {
+    color: var(--gray12);
+  }
+}
+
+.command-input__kdb {
+  font-size: 12px;
+  font-family: var(--font-sans);
+  text-transform: uppercase;
+}
+
+[cmdk-overlay] {
+  position: fixed;
+  inset: 0px;
+  background-color: var(--overlay);
+  z-index: 100;
+  backdrop-filter: blur(2.5px);
+}
+
+[cmdk-root] {
+  height: 100%;
+  border-radius: 12px;
+  background: var(--gray1);
+  padding: 8px 0;
+  font-family: var(--font-sans);
+  box-shadow: 0 16px 20px hsla(0, 0%, 0%, 20%);
+
+  .dark & {
+    background: var(--gray2);
+  }
+}
+
+[cmdk-input] {
+  font-family: var(--font-sans);
+  border: none;
+  width: 100%;
+  font-size: 20px;
+  padding: 8px 0 8px 16px;
+  outline: none;
+  background: transparent;
+  color: var(--gray12);
+
+  &::placeholder {
+    color: var(--gray9);
+  }
+}
+
+[cmdk-item] {
+  content-visibility: auto;
+
+  cursor: pointer;
+  height: 40px;
+  border-radius: 8px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 8px;
+  color: var(--gray10);
+  font-weight: 400;
+  user-select: none;
+
+  &[aria-selected='true'] {
+    background: var(--gray4);
+    color: var(--gray12);
+  }
+
+  &:active {
+    transition-property: background;
+    background: var(--gray4);
+  }
+
+  &:first-child {
+    margin-top: 8px;
+  }
+
+  & + [cmdk-item] {
+    margin-top: 4px;
+  }
+}
+
+[cmdk-list] {
+  height: calc(var(--cmdk-list-height) + 32px);
+  max-height: 392px;
+  padding: 0 8px;
+  padding-bottom: 20px;
+  overflow: auto;
+  overscroll-behavior: contain;
+  transition: height 100ms ease;
+}
+
+[cmdk-separator] {
+  height: 1px;
+  width: 100%;
+  background: var(--gray5);
+  margin: 4px 0;
+}
+
+*:not([hidden]) + [cmdk-group] {
+  margin-top: 8px;
+}
+
+[cmdk-group-heading] {
+  user-select: none;
+  font-size: 12px;
+  color: var(--gray11);
+  padding: 0 8px;
+  display: flex;
+  align-items: center;
+  margin-top: 12px;
+}
+
+[cmdk-empty] {
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 64px;
+  white-space: pre-wrap;
+  color: var(--gray11);
+}
+
+[cmdk-dialog] {
+  max-width: 640px;
+  width: 100%;
+  position: fixed;
+  top: 10%;
+  left: 50%;
+  z-index: 10000;
+  transform: translateX(-50%);
+  transform-origin: 50% center;
+  will-change: transform;
+
+  animation-duration: 0.2s;
+  animation-timing-function: ease;
+
+  &[data-state='open'] {
+    animation-name: slideIn;
+  }
+
+  &[data-state='closed'] {
+    animation-name: slideOut;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-50%) scale(0.97);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(-50%) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+  from {
+    opacity: 1;
+    transform: translatex(-50%) scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: translatex(-50%) scale(0.97);
+  }
+}
+
+@media (max-width: 640px) {
+  [cmdk-dialog] {
+    bottom: 0;
+    top: 25%;
+  }
+
+  [cmdk-root] {
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+  }
+
+  [cmdk-list] {
+    max-width: none;
+  }
+}
+
+@media (min-height: 1100px) {
+  [cmdk-dialog] {
+    top: 20%;
+  }
+}

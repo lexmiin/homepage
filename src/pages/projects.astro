@@ -1,0 +1,10 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import ProjectItem from '../components/project-item'
+import s from '../styles/projects.module.scss'
+import { projects } from '../lib/projects'
+---
+<BaseLayout title="Projects" description="Some stuff I've built">
+  <p class={s.heading}>My Projects</p>
+  <ul class={s.list}>{projects.map(p => <ProjectItem {...p} />)}</ul>
+</BaseLayout>

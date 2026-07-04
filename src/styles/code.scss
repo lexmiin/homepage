@@ -1,0 +1,45 @@
+.astro-code,
+pre[class*='language-'] {
+  width: 100%;
+  margin: 0 auto;
+  padding: 14px 16px;
+  border: 1px solid var(--gray5);
+  border-radius: 4px;
+  overflow-x: auto;
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+
+  & code {
+    font-size: 14px;
+    line-height: 1.7;
+    background: transparent;
+    border: 0;
+    padding: 0;
+  }
+
+  & .code-line {
+    display: block;
+    min-height: 1.7em;
+  }
+}
+
+.dark .astro-code,
+.dark .astro-code span {
+  color: var(--shiki-dark) !important;
+  background-color: var(--shiki-dark-bg) !important;
+  font-style: var(--shiki-dark-font-style) !important;
+  font-weight: var(--shiki-dark-font-weight) !important;
+  text-decoration: var(--shiki-dark-text-decoration) !important;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+pre::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+pre {
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}

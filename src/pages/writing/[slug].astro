@@ -1,0 +1,32 @@
+---
+import { getCollection, render } from 'astro:content'
+import { format } from 'date-fns'
+import readingTime from 'reading-time'
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import s from '../../styles/post.module.scss'
+
+export const prerender = true
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog')
+  return posts.map(post => ({ params: { slug: post.id }, props: { post } }))
+}
+
+const { post } = Astro.props
+const { Content } = await render(post)
+const stats = readingTime(post.body ?? '')
+---
+<BaseLayout title={post.data.title} description={post.data.description} image="/lex-unix-og.png" type="article">
+  <article class={s.post}>
+    <h1>{post.data.title}</h1>
+    <div class={s['header-container']}>
+      <div class={s['header-info']}>
+        <div class={s['author-info']}><img src="/profile-square.png" alt="Profile Image" width="32" height="32" /><span>Alexey Miin</span></div>
+        <span>&bull;</span>
+        <span>{format(post.data.date, 'MMMM d, yyyy')}</span>
+      </div>
+      <div>{stats.text}</div>
+    </div>
+    <Content />
+  </article>
+</BaseLayout>
