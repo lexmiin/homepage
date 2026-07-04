@@ -1,0 +1,52 @@
+---
+import '../styles/globals.scss'
+import '../styles/command.scss'
+import '../styles/container.scss'
+import '../styles/code.scss'
+import Navbar from '../components/navbar'
+import CommandMenu from '../components/command-menu'
+import { SpeedInsights } from '@vercel/speed-insights/react'
+
+interface Props {
+  title?: string
+  description: string
+  image?: string
+  type?: string
+}
+
+const { title, description, image = '/lex-unix-og.png', type = 'website' } = Astro.props
+const pageTitle = title ? `${title} - Lex Unix` : 'Lex Unix'
+const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://lexunix.me')
+const metaImage = new URL(image, Astro.site ?? 'https://lexunix.me')
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="author" content="Alexey Miin" />
+    <meta name="description" content={description} />
+    <title>{pageTitle}</title>
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={metaImage} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:site_name" content="lexunix.me" />
+    <meta property="og:type" content={type} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={metaImage} />
+    <link rel="canonical" href={canonical} />
+    <script is:inline>
+      const storedTheme = localStorage.getItem('theme')
+      const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+      document.documentElement.classList.toggle('dark', storedTheme ? storedTheme === 'dark' : systemDark)
+    </script>
+  </head>
+  <body>
+    <Navbar client:load />
+    <CommandMenu client:load />
+    <main class="main"><slot /></main>
+    <SpeedInsights client:load />
+  </body>
+</html>

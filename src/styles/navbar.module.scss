@@ -1,0 +1,36 @@
+.nav {
+  width: 100%;
+  max-width: 720px;
+  margin-right: auto;
+  margin-left: auto;
+  padding: var(--space3) var(--space2) 0;
+  display: flex;
+  justify-content: right;
+}
+
+.button {
+  width: 48px;
+  height: 48px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  background-color: transparent;
+  cursor: pointer;
+  transition:
+    background-color 200ms,
+    box-shadow 200ms;
+
+  &:active {
+    box-shadow: 0 0 0 3px var(--grayA5);
+    outline: none;
+  }
+
+  &:hover {
+    background-color: var(--grayA4);
+  }
+}
+
+.nav svg path {
+  fill: var(--main-fg);
+}
