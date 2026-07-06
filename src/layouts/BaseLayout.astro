@@ -37,6 +37,13 @@ const metaImage = new URL(image, Astro.site ?? 'https://lexunix.me')
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={metaImage} />
     <link rel="canonical" href={canonical} />
+    <link
+      rel="preload"
+      href="/fonts/inter-var-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
     <script is:inline>
       const storedTheme = localStorage.getItem('theme')
       const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches
