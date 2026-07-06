@@ -1,29 +1,68 @@
 ---
 import { getCollection } from 'astro:content'
-import BaseLayout from '../layouts/BaseLayout.astro'
-import s from '../styles/index.module.scss'
-import { projects } from '../lib/projects'
+import BaseLayout from '@/layouts/BaseLayout.astro'
+import s from '@/styles/index.module.scss'
+import { projects } from '@/lib/projects'
+import { Image } from 'astro:assets'
 
-const posts = (await getCollection('blog')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf()).slice(0, 2)
+const posts = (await getCollection('blog'))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 2)
 ---
+
 <BaseLayout description="Software Engineer based in Kyiv, Ukraine.">
   <div class={s.info}>
-    <div class={s['img-container']}><img src="/profile.png" alt="Profile" width="100" height="64" class={s.img} /></div>
-    <div><p class={s.name}>Alexey Miin</p><p class={s.muted}>Software Engineer at Uvaga Communications Agency</p></div>
+    <div class={s['img-container']}>
+      <Image
+        src="/profile.png"
+        alt="Profile"
+        width="100"
+        height="64"
+        class={s.img}
+        loading="eager"
+      />
+    </div>
+    <div>
+      <p class={s.name}>Alexey Miin</p><p class={s.muted}>
+        Software Engineer at Uvaga Communications Agency
+      </p>
+    </div>
   </div>
   <div class={s.about}><p>Software Engineer based in Kyiv, Ukraine.</p></div>
   <div class={s.content}>
     <section class={s.content}>
       <h1>Projects</h1>
       <div class={s.subcontent}>
-        {projects.slice(0, 2).map(p => <div><a href={p.href} target="_blank" class={s.subTitle}>{p.name}</a><p class={s.subDesc}>{p.description}</p></div>)}
+        {
+          projects.slice(0, 2).map(p => (
+            <div>
+              <>
+                <a href={p.href} target="_blank" class={s.subTitle}>
+                  {p.name}
+                </a>
+                <p class={s.subDesc}>{p.description}</p>
+              </>
+            </div>
+          ))
+        }
         <div><a href="/projects" class={s.subTitle}>All projects</a></div>
       </div>
     </section>
     <section class={s.content}>
       <h1>Writing</h1>
       <div class={s.subcontent}>
-        {posts.map(p => <div><a href={`/writing/${p.id}`} class={s.subTitle}>{p.data.title}</a><p class={s.subDesc}>{p.data.description}</p></div>)}
+        {
+          posts.map(p => (
+            <div>
+              <>
+                <a href={`/writing/${p.id}`} class={s.subTitle}>
+                  {p.data.title}
+                </a>
+                <p class={s.subDesc}>{p.data.description}</p>
+              </>
+            </div>
+          ))
+        }
         <div><a href="/writing" class={s.subTitle}>All writing</a></div>
       </div>
     </section>
