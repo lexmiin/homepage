@@ -1,11 +1,28 @@
 ---
 import { getCollection } from 'astro:content'
 import BaseLayout from '../../layouts/BaseLayout.astro'
-import PostPreview from '../../components/post-preview'
+import PostPreview from '@/components/PostPreview.astro'
 import s from '../../styles/writing.module.scss'
-const posts = (await getCollection('blog')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+
+const posts = (await getCollection('blog')).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+)
 ---
-<BaseLayout title="Writing" description="Place for sharing my thoughts and other stuff">
+
+<BaseLayout
+  title="Writing"
+  description="Place for sharing my thoughts and other stuff"
+>
   <p class={s.heading}>Place to Share My Thoughts</p>
-  <ul class={s.list}>{posts.map(post => <PostPreview title={post.data.title} description={post.data.description} slug={post.id} />)}</ul>
+  <ul class={s.list}>
+    {
+      posts.map(post => (
+        <PostPreview
+          title={post.data.title}
+          description={post.data.description}
+          slug={post.id}
+        />
+      ))
+    }
+  </ul>
 </BaseLayout>

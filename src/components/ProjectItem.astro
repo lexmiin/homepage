@@ -1,0 +1,23 @@
+---
+import s from '@/styles/projects.module.scss'
+
+interface Props {
+  name: string
+  description: string
+  href: string
+  year: number
+}
+
+const { name, description, href, year } = Astro.props
+---
+
+<li class={s.li}>
+  <a href={href} target="_blank" rel="noreferrer noopener" class={s.item}>
+    <p class={s.name}>
+      {name}
+      <span class={s.description}>{description}</span>
+    </p>
+    <div class={s.line}></div>
+    <p class={s.year}>{year}</p>
+  </a>
+</li>

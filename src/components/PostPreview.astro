@@ -1,0 +1,20 @@
+---
+import s from '@/styles/writing.module.scss'
+
+interface Props {
+  title: string
+  description: string
+  slug: string
+}
+
+const { title, description, slug } = Astro.props
+---
+
+<li class={s['list-item']}>
+  <a href={`/writing/${slug}`}>
+    <div class={s.content}>
+      <p>{title}</p>
+      <p class={s.description}>{description}</p>
+    </div>
+  </a>
+</li>
