@@ -22,7 +22,9 @@ const posts = (await getCollection('blog'))
       />
     </div>
     <div>
-      <p class="font-semibold">Alexey Miin</p><p class="text-muted-foreground">
+      <h1 class="font-semibold">Alexey Miin</h1><p
+        class="text-muted-foreground"
+      >
         Software Engineer at Uvaga Communications Agency
       </p>
     </div>
@@ -32,23 +34,28 @@ const posts = (await getCollection('blog'))
   </div>
   <div class="mt-20 mb-15 sm:mt-28">
     <section
-      class="mt-20 mb-15 sm:mt-28 [&>h1]:mb-5 [&>h1]:text-base [&>h1]:text-muted-foreground"
+      class="mt-20 mb-15 sm:mt-28 [&>h2]:mb-5 [&>h2]:text-base [&>h2]:text-muted-foreground"
     >
-      <h1>Projects</h1>
+      <h2>Projects</h2>
       <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-5">
         {
           projects.slice(0, 2).map(p => (
             <div>
-              <>
-                <a
-                  href={p.href}
-                  target="_blank"
-                  class="grid leading-9 font-medium"
-                >
+              <a
+                href={p.href}
+                target="_blank"
+                rel="noreferrer noopener"
+                class="home-preview-link"
+              >
+                <span class="home-preview-title">
                   {p.name}
-                </a>
-                <p class="text-muted-foreground">{p.description}</p>
-              </>
+                  <span class="home-preview-external-icon" aria-hidden="true">
+                    ↗
+                  </span>
+                  <span class="visually-hidden">Opens in a new tab</span>
+                </span>
+                <span class="block text-muted-foreground">{p.description}</span>
+              </a>
             </div>
           ))
         }
@@ -59,19 +66,19 @@ const posts = (await getCollection('blog'))
       </div>
     </section>
     <section
-      class="mt-20 mb-15 sm:mt-28 [&>h1]:mb-5 [&>h1]:text-base [&>h1]:text-muted-foreground"
+      class="mt-20 mb-15 sm:mt-28 [&>h2]:mb-5 [&>h2]:text-base [&>h2]:text-muted-foreground"
     >
-      <h1>Writing</h1>
+      <h2>Writing</h2>
       <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-5">
         {
           posts.map(p => (
             <div>
-              <>
-                <a href={`/writing/${p.id}`} class="grid leading-9 font-medium">
-                  {p.data.title}
-                </a>
-                <p class="text-muted-foreground">{p.data.description}</p>
-              </>
+              <a href={`/writing/${p.id}`} class="home-preview-link">
+                <span class="home-preview-title">{p.data.title}</span>
+                <span class="block text-muted-foreground">
+                  {p.data.description}
+                </span>
+              </a>
             </div>
           ))
         }

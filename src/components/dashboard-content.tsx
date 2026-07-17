@@ -52,7 +52,7 @@ export default function DashboardContent() {
 
   return (
     <>
-      <p className="text-xl font-semibold capitalize">Tools i use everyday</p>
+      <h2 className="text-xl font-semibold capitalize">Tools i use everyday</h2>
       <ul className="my-10 flex list-none flex-col p-0">
         {tools.map(([title, href, src, description]) => (
           <MediaListItem key={title} title={title} href={href} src={src}>
@@ -62,9 +62,9 @@ export default function DashboardContent() {
       </ul>
       {playlists && (
         <>
-          <p className="mt-14 text-xl font-semibold capitalize">
+          <h2 className="mt-14 text-xl font-semibold capitalize">
             Spotify playlists
-          </p>
+          </h2>
           <ul className="my-10 flex list-none flex-col p-0">
             {playlists.map(playlist => (
               <MediaListItem
@@ -82,9 +82,9 @@ export default function DashboardContent() {
       )}
       {topTracks && (
         <>
-          <p className="mt-14 text-xl font-semibold capitalize">
+          <h2 className="mt-14 text-xl font-semibold capitalize">
             Spoify most played songs
-          </p>
+          </h2>
           <ul className="my-10 flex list-none flex-col p-0">
             {topTracks.map(track => (
               <MediaListItem
