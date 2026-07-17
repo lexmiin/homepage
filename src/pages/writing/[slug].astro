@@ -16,12 +16,25 @@ const { post } = Astro.props
 const { Content } = await render(post)
 const stats = readingTime(post.body ?? '')
 ---
-<BaseLayout title={post.data.title} description={post.data.description} image="/lex-unix-og.png" type="article">
+
+<BaseLayout
+  title={post.data.title}
+  description={post.data.description}
+  image="/lex-unix-og.png"
+  type="article"
+>
   <article class={s.post}>
     <h1>{post.data.title}</h1>
     <div class={s['header-container']}>
       <div class={s['header-info']}>
-        <div class={s['author-info']}><img src="/profile-square.png" alt="Profile Image" width="32" height="32" /><span>Alexey Miin</span></div>
+        <div class={s['author-info']}>
+          <img
+            src="/profile-square.png"
+            alt="Profile Image"
+            width="32"
+            height="32"
+          /><span>Alexey Miin</span>
+        </div>
         <span>&bull;</span>
         <span>{format(post.data.date, 'MMMM d, yyyy')}</span>
       </div>
@@ -29,4 +42,44 @@ const stats = readingTime(post.body ?? '')
     </div>
     <Content />
   </article>
+
+  <script>
+    const resetTimers = new WeakMap<HTMLButtonElement, number>()
+
+    document.addEventListener('click', async event => {
+      if (!(event.target instanceof Element)) return
+
+      const button =
+        event.target.closest<HTMLButtonElement>('.code-copy-button')
+      if (!button) return
+
+      const code = button.closest('.code-block')?.querySelector('code')
+      const label = button.querySelector('.visually-hidden')
+      if (!code || !label) return
+
+      const currentTimer = resetTimers.get(button)
+      if (currentTimer) window.clearTimeout(currentTimer)
+
+      button.disabled = true
+
+      try {
+        await navigator.clipboard.writeText(code.textContent ?? '')
+        button.dataset.state = 'copied'
+        label.textContent = 'Copied'
+      } catch {
+        button.dataset.state = 'error'
+        label.textContent = 'Copy failed'
+      } finally {
+        button.disabled = false
+        resetTimers.set(
+          button,
+          window.setTimeout(() => {
+            delete button.dataset.state
+            label.textContent = 'Copy code to clipboard'
+            resetTimers.delete(button)
+          }, 2000)
+        )
+      }
+    })
+  </script>
 </BaseLayout>
