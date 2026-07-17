@@ -1,11 +1,12 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro'
 import ProjectItem from '@/components/ProjectItem.astro'
-import s from '@/styles/projects.module.scss'
 import { projects } from '@/lib/projects'
 ---
 
 <BaseLayout title="Projects" description="Some stuff I've built">
-  <p class={s.heading}>My Projects</p>
-  <ul class={s.list}>{projects.map(p => <ProjectItem {...p} />)}</ul>
+  <p class="text-xl font-semibold">My Projects</p>
+  <ul class="mt-14 list-none p-0">
+    {projects.map(p => <ProjectItem {...p} />)}
+  </ul>
 </BaseLayout>

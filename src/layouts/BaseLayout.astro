@@ -1,8 +1,5 @@
 ---
-import '@/styles/globals.scss'
-import '@/styles/command.scss'
-import '@/styles/container.scss'
-import '@/styles/code.scss'
+import '@/styles/globals.css'
 import Navbar from '../components/navbar'
 import CommandMenu from '../components/command-menu'
 
@@ -91,6 +88,6 @@ const metaImage = new URL(image, Astro.site ?? 'https://lexunix.me')
   <body>
     <Navbar client:load />
     <CommandMenu client:load />
-    <main class="main"><slot /></main>
+    <main class="mx-auto w-full max-w-180 px-4 pt-10"><slot /></main>
   </body>
 </html>

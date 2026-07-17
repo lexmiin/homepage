@@ -1,6 +1,4 @@
 ---
-import s from '@/styles/writing.module.scss'
-
 interface Props {
   title: string
   description: string
@@ -10,11 +8,13 @@ interface Props {
 const { title, description, slug } = Astro.props
 ---
 
-<li class={s['list-item']}>
+<li
+  class="-mx-4 rounded-md bg-transparent px-4 transition-colors duration-150 hover:bg-accent [&:first-child_.post-preview-content]:border-none [&:hover+li_.post-preview-content]:border-transparent [&:hover_.post-preview-content]:border-transparent"
+>
   <a href={`/writing/${slug}`}>
-    <div class={s.content}>
+    <div class="post-preview-content border-t border-border py-4">
       <p>{title}</p>
-      <p class={s.description}>{description}</p>
+      <p class="text-muted-foreground">{description}</p>
     </div>
   </a>
 </li>

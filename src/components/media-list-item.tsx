@@ -1,5 +1,4 @@
 import type { ReactNode } from 'react'
-import s from '@/styles/media-list.module.scss'
 
 interface Props {
   src: string
@@ -17,26 +16,26 @@ export default function MediaListItem({
   children
 }: Props) {
   return (
-    <li className={s['list-item']}>
+    <li className="-mx-4 rounded-md bg-transparent px-4 hover:bg-accent [&:first-child_.media-text]:border-t-0 [&:hover+li_.media-text]:border-transparent [&:hover_.media-text]:border-transparent">
       <a
         href={href}
         target="_blank"
         rel="noopener noreferrer"
-        className={s.content}
+        className="flex min-h-20 w-full list-none items-center gap-4"
       >
-        <div className={s['image-container']}>
+        <div className="relative flex size-14 items-center justify-center overflow-hidden rounded-md">
           <img src={src} alt={title} width={size} height={size} />
           <img
             src={src}
             alt={title}
             width={size}
             height={size}
-            className={s.glow}
+            className="absolute top-[-0.1em] right-[1.15em] scale-200 opacity-25 blur-[12px]"
           />
         </div>
-        <div className={s['text-container']}>
+        <div className="media-text flex flex-1 flex-col border-t border-border py-4 text-sm">
           <p>{title}</p>
-          <p className={s.description}>{children}</p>
+          <p className="text-muted-foreground">{children}</p>
         </div>
       </a>
     </li>

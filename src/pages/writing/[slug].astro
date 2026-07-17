@@ -3,7 +3,6 @@ import { getCollection, render } from 'astro:content'
 import { format } from 'date-fns'
 import readingTime from 'reading-time'
 import BaseLayout from '../../layouts/BaseLayout.astro'
-import s from '../../styles/post.module.scss'
 
 export const prerender = true
 
@@ -23,12 +22,15 @@ const stats = readingTime(post.body ?? '')
   image="/lex-unix-og.png"
   type="article"
 >
-  <article class={s.post}>
+  <article class="post mb-4 sm:mb-8">
     <h1>{post.data.title}</h1>
-    <div class={s['header-container']}>
-      <div class={s['header-info']}>
-        <div class={s['author-info']}>
+    <div
+      class="mt-4 mb-10 flex flex-col items-start gap-4 font-normal text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:gap-2"
+    >
+      <div class="flex items-center gap-2">
+        <div class="flex items-center gap-2">
           <img
+            class="rounded-full select-none"
             src="/profile-square.png"
             alt="Profile Image"
             width="32"

@@ -1,4 +1,3 @@
-import s from '@/styles/dashboard.module.scss'
 import useSWR from 'swr'
 import type { Playlist, Track } from '@/lib/types'
 import fetcher from '@/lib/fetcher'
@@ -53,8 +52,8 @@ export default function DashboardContent() {
 
   return (
     <>
-      <p className={s.heading}>Tools i use everyday</p>
-      <ul className={s.list}>
+      <p className="text-xl font-semibold capitalize">Tools i use everyday</p>
+      <ul className="my-10 flex list-none flex-col p-0">
         {tools.map(([title, href, src, description]) => (
           <MediaListItem key={title} title={title} href={href} src={src}>
             {description}
@@ -63,8 +62,10 @@ export default function DashboardContent() {
       </ul>
       {playlists && (
         <>
-          <p className={s.heading}>Spotify playlists</p>
-          <ul className={s.list}>
+          <p className="mt-14 text-xl font-semibold capitalize">
+            Spotify playlists
+          </p>
+          <ul className="my-10 flex list-none flex-col p-0">
             {playlists.map(playlist => (
               <MediaListItem
                 key={playlist.name}
@@ -81,8 +82,10 @@ export default function DashboardContent() {
       )}
       {topTracks && (
         <>
-          <p className={s.heading}>Spoify most played songs</p>
-          <ul className={s.list}>
+          <p className="mt-14 text-xl font-semibold capitalize">
+            Spoify most played songs
+          </p>
+          <ul className="my-10 flex list-none flex-col p-0">
             {topTracks.map(track => (
               <MediaListItem
                 key={track.name}

@@ -1,6 +1,4 @@
 ---
-import s from '@/styles/projects.module.scss'
-
 interface Props {
   name: string
   description: string
@@ -11,13 +9,23 @@ interface Props {
 const { name, description, href, year } = Astro.props
 ---
 
-<li class={s.li}>
-  <a href={href} target="_blank" rel="noreferrer noopener" class={s.item}>
-    <p class={s.name}>
+<li
+  class="-mx-4 rounded-lg bg-transparent px-4 py-3.5 transition-colors duration-150 hover:bg-accent"
+>
+  <a
+    href={href}
+    target="_blank"
+    rel="noreferrer noopener"
+    class="relative flex cursor-pointer items-center gap-2 align-bottom text-sm"
+  >
+    <p class="font-medium">
       {name}
-      <span class={s.description}>{description}</span>
+      <span
+        class="ml-0.5 hidden pl-2 font-normal text-muted-foreground sm:inline"
+        >{description}</span
+      >
     </p>
-    <div class={s.line}></div>
-    <p class={s.year}>{year}</p>
+    <div class="project-line relative flex-1"></div>
+    <p class="text-muted-foreground">{year}</p>
   </a>
 </li>

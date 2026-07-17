@@ -1,7 +1,6 @@
 ---
 import { getCollection } from 'astro:content'
 import BaseLayout from '@/layouts/BaseLayout.astro'
-import s from '@/styles/index.module.scss'
 import { projects } from '@/lib/projects'
 import { Image } from 'astro:assets'
 
@@ -11,59 +10,74 @@ const posts = (await getCollection('blog'))
 ---
 
 <BaseLayout description="Software Engineer based in Kyiv, Ukraine.">
-  <div class={s.info}>
-    <div class={s['img-container']}>
+  <div class="mb-10 flex items-center gap-4">
+    <div class="relative size-16 shrink-0 overflow-hidden rounded-full">
       <Image
         src="/profile.png"
         alt="Profile"
         width="100"
         height="64"
-        class={s.img}
+        class="size-full object-cover"
         loading="eager"
       />
     </div>
     <div>
-      <p class={s.name}>Alexey Miin</p><p class={s.muted}>
+      <p class="font-semibold">Alexey Miin</p><p class="text-muted-foreground">
         Software Engineer at Uvaga Communications Agency
       </p>
     </div>
   </div>
-  <div class={s.about}><p>Software Engineer based in Kyiv, Ukraine.</p></div>
-  <div class={s.content}>
-    <section class={s.content}>
+  <div class="flex flex-col gap-4">
+    <p>Software Engineer based in Kyiv, Ukraine.</p>
+  </div>
+  <div class="mt-20 mb-15 sm:mt-28">
+    <section
+      class="mt-20 mb-15 sm:mt-28 [&>h1]:mb-5 [&>h1]:text-base [&>h1]:text-muted-foreground"
+    >
       <h1>Projects</h1>
-      <div class={s.subcontent}>
+      <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-5">
         {
           projects.slice(0, 2).map(p => (
             <div>
               <>
-                <a href={p.href} target="_blank" class={s.subTitle}>
+                <a
+                  href={p.href}
+                  target="_blank"
+                  class="grid leading-9 font-medium"
+                >
                   {p.name}
                 </a>
-                <p class={s.subDesc}>{p.description}</p>
+                <p class="text-muted-foreground">{p.description}</p>
               </>
             </div>
           ))
         }
-        <div><a href="/projects" class={s.subTitle}>All projects</a></div>
+        <div>
+          <a href="/projects" class="grid leading-9 font-medium">All projects</a
+          >
+        </div>
       </div>
     </section>
-    <section class={s.content}>
+    <section
+      class="mt-20 mb-15 sm:mt-28 [&>h1]:mb-5 [&>h1]:text-base [&>h1]:text-muted-foreground"
+    >
       <h1>Writing</h1>
-      <div class={s.subcontent}>
+      <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-5">
         {
           posts.map(p => (
             <div>
               <>
-                <a href={`/writing/${p.id}`} class={s.subTitle}>
+                <a href={`/writing/${p.id}`} class="grid leading-9 font-medium">
                   {p.data.title}
                 </a>
-                <p class={s.subDesc}>{p.data.description}</p>
+                <p class="text-muted-foreground">{p.data.description}</p>
               </>
             </div>
           ))
         }
-        <div><a href="/writing" class={s.subTitle}>All writing</a></div>
+        <div>
+          <a href="/writing" class="grid leading-9 font-medium">All writing</a>
+        </div>
       </div>
     </section>
   </div>
