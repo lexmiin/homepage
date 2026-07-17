@@ -4,12 +4,14 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/release-26.05";
     flake-utils.url = "github:numtide/flake-utils";
+    fnox.url = "github:lexmiin/fnox-nix";
   };
 
   outputs = {
     self,
     nixpkgs,
     flake-utils,
+    fnox,
   }:
     {
       overlays.default = final: prev: {
@@ -23,6 +25,7 @@
           inherit system;
           overlays = [
             self.overlays.default
+            fnox.overlays.default
           ];
         };
       in {
@@ -32,6 +35,7 @@
           packages = [
             pkgs.nodejs
             pkgs.pnpm
+            pkgs.fnox
           ];
         };
       }

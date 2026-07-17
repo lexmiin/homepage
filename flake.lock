@@ -18,7 +18,41 @@
         "type": "github"
       }
     },
+    "fnox": {
+      "inputs": {
+        "nixpkgs": "nixpkgs"
+      },
+      "locked": {
+        "lastModified": 1783677281,
+        "narHash": "sha256-oRCKKFTQxN0gMj+K99l9CE6hPMMZuIK/Fsh+GpA9M+E=",
+        "owner": "lexmiin",
+        "repo": "fnox-nix",
+        "rev": "fd71994f5d40b0d97ede450d7009dac2ceee55b6",
+        "type": "github"
+      },
+      "original": {
+        "owner": "lexmiin",
+        "repo": "fnox-nix",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
+      "locked": {
+        "lastModified": 1782760764,
+        "narHash": "sha256-N66fYdUuZ9hpdM7jsQ7CUWtLJduqGDyTGCaLR62CXaQ=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "7a1a64774a5fd0b0cd39ac95d0e170ace8b266a0",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixpkgs-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_2": {
       "locked": {
         "lastModified": 1783325402,
         "narHash": "sha256-VG1wPC5xg9XOTr3gebeWDWs2haIQ4ALDm5oBuQdsWz0=",
@@ -37,7 +71,8 @@
     "root": {
       "inputs": {
         "flake-utils": "flake-utils",
-        "nixpkgs": "nixpkgs"
+        "fnox": "fnox",
+        "nixpkgs": "nixpkgs_2"
       }
     },
     "systems": {
