@@ -9,7 +9,7 @@ const { title, description, slug } = Astro.props
 ---
 
 <li
-  class="-mx-4 rounded-md bg-transparent px-4 transition-colors duration-150 hover:bg-accent [&:first-child_.post-preview-content]:border-none [&:hover+li_.post-preview-content]:border-transparent [&:hover_.post-preview-content]:border-transparent"
+  class="-mx-4 rounded-md bg-transparent px-4 motion-safe:pointer-fine:transition-colors motion-safe:pointer-fine:duration-150 pointer-fine:hover:bg-accent [&:first-child_.post-preview-content]:border-none pointer-fine:[&:hover+li_.post-preview-content]:border-transparent pointer-fine:[&:hover_.post-preview-content]:border-transparent"
 >
   <a href={`/writing/${slug}`}>
     <div class="post-preview-content border-t border-border py-4">

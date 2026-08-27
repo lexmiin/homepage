@@ -10,7 +10,7 @@ const { name, description, href, year } = Astro.props
 ---
 
 <li
-  class="-mx-4 rounded-lg bg-transparent px-4 py-3.5 transition-colors duration-150 hover:bg-accent"
+  class="-mx-4 rounded-lg bg-transparent px-4 py-3.5 motion-safe:pointer-fine:transition-colors motion-safe:pointer-fine:duration-150 pointer-fine:hover:bg-accent"
 >
   <a
     href={href}

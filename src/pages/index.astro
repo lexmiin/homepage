@@ -7,6 +7,9 @@ import { Image } from 'astro:assets'
 const posts = (await getCollection('blog'))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
   .slice(0, 2)
+
+const homePreviewClass =
+  'group -mx-3 block rounded-lg px-3 py-1 focus-visible:bg-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-link pointer-fine:hover:bg-accent pointer-fine:active:bg-accent motion-safe:pointer-fine:transition-[background-color_150ms_ease,transform_120ms_cubic-bezier(0.23,1,0.32,1)] motion-safe:pointer-fine:active:scale-[0.99]'
 ---
 
 <BaseLayout description="Software Engineer based in Kyiv, Ukraine.">
@@ -45,11 +48,14 @@ const posts = (await getCollection('blog'))
                 href={p.href}
                 target="_blank"
                 rel="noreferrer noopener"
-                class="home-preview-link"
+                class={homePreviewClass}
               >
-                <span class="home-preview-title">
+                <span class="flex min-h-9 items-center leading-6 font-medium">
                   {p.name}
-                  <span class="home-preview-external-icon" aria-hidden="true">
+                  <span
+                    class="ml-1.5 text-muted-foreground opacity-65 motion-safe:pointer-fine:transition-[opacity_150ms_ease,transform_150ms_cubic-bezier(0.23,1,0.32,1)] motion-safe:pointer-fine:group-hover:translate-x-px motion-safe:pointer-fine:group-hover:-translate-y-px pointer-fine:group-hover:opacity-100"
+                    aria-hidden="true"
+                  >
                     ↗
                   </span>
                   <span class="visually-hidden">Opens in a new tab</span>
@@ -73,8 +79,10 @@ const posts = (await getCollection('blog'))
         {
           posts.map(p => (
             <div>
-              <a href={`/writing/${p.id}`} class="home-preview-link">
-                <span class="home-preview-title">{p.data.title}</span>
+              <a href={`/writing/${p.id}`} class={homePreviewClass}>
+                <span class="flex min-h-9 items-center leading-6 font-medium">
+                  {p.data.title}
+                </span>
                 <span class="block text-muted-foreground">
                   {p.data.description}
                 </span>

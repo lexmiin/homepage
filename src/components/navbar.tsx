@@ -9,7 +9,7 @@ const Navbar: React.FC = () => {
     <div className="mx-auto flex w-full max-w-180 justify-end px-4 pt-6">
       <button
         aria-label="Menu"
-        className="inline-flex size-12 cursor-pointer items-center justify-center rounded-[10px] bg-transparent transition-[background-color,box-shadow] duration-200 hover:bg-accent active:ring-3 active:ring-ring focus:outline-none [&_svg_path]:fill-foreground"
+        className="inline-flex size-12 cursor-pointer items-center justify-center rounded-[10px] bg-transparent focus:outline-none motion-safe:pointer-fine:transition-[background-color,box-shadow] motion-safe:pointer-fine:duration-200 pointer-fine:hover:bg-accent pointer-fine:active:ring-3 pointer-fine:active:ring-ring [&_svg_path]:fill-foreground"
         onClick={() => setOpen(!open)}
       >
         <CommandIcon />

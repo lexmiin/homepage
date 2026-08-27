@@ -16,7 +16,7 @@ export default function MediaListItem({
   children
 }: Props) {
   return (
-    <li className="-mx-4 rounded-md bg-transparent px-4 hover:bg-accent [&:first-child_.media-text]:border-t-0 [&:hover+li_.media-text]:border-transparent [&:hover_.media-text]:border-transparent">
+    <li className="-mx-4 rounded-md bg-transparent px-4 pointer-fine:hover:bg-accent [&:first-child_.media-text]:border-t-0 pointer-fine:[&:hover+li_.media-text]:border-transparent pointer-fine:[&:hover_.media-text]:border-transparent">
       <a
         href={href}
         target="_blank"
