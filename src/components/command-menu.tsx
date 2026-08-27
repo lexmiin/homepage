@@ -13,6 +13,10 @@ import {
 } from './icons'
 import { commandState } from '@/states/command-menu'
 
+// Browsers do not expose physical-keyboard presence. A fine, hover-capable
+// primary pointer is the closest capability-based proxy for PCs and laptops.
+const KEYBOARD_ORIENTED_DEVICE_QUERY = '(hover: hover) and (pointer: fine)'
+
 const externalLink = (url: string) => () =>
   window.open(url, '_blank', 'noopener noreferrer')
 const navigate = (url: string) => () => {
@@ -31,6 +35,8 @@ const applyTheme = (theme: Theme) => {
 const CommandMenu: React.FC = () => {
   const [isOpen, setIsOpen] = useAtom(commandState)
   const [theme, setThemeState] = useState<Theme>('light')
+  const [isInputTabbable, setIsInputTabbable] = useState(false)
+  const shouldAutoFocusInput = useMediaQuery(KEYBOARD_ORIENTED_DEVICE_QUERY)
 
   useEffect(() => {
     const storedTheme = localStorage.getItem('theme') as Theme | null
@@ -86,10 +92,27 @@ const CommandMenu: React.FC = () => {
     return () => document.removeEventListener('keydown', down)
   }, [setIsOpen])
 
+  useEffect(() => {
+    if (!isOpen) {
+      setIsInputTabbable(false)
+      return
+    }
+
+    if (shouldAutoFocusInput) return
+
+    // cmdk does not forward Radix's onOpenAutoFocus prop. Exclude the input
+    // from the initial focus pass, then restore normal tap and tab focus.
+    const frame = window.requestAnimationFrame(() => setIsInputTabbable(true))
+    return () => window.cancelAnimationFrame(frame)
+  }, [isOpen, shouldAutoFocusInput])
+
   return (
     <Command.Dialog open={isOpen} onOpenChange={setIsOpen}>
       <div className="command-input">
-        <Command.Input placeholder="Search" />
+        <Command.Input
+          placeholder="Search"
+          tabIndex={shouldAutoFocusInput || isInputTabbable ? 0 : -1}
+        />
         <button
           className="command-input__button"
           onClick={() => setIsOpen(false)}
@@ -131,6 +154,21 @@ const CommandMenu: React.FC = () => {
       </Command.List>
     </Command.Dialog>
   )
+}
+
+const useMediaQuery = (query: string) => {
+  const [matches, setMatches] = useState(false)
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia(query)
+    const updateMatch = () => setMatches(mediaQuery.matches)
+
+    updateMatch()
+    mediaQuery.addEventListener('change', updateMatch)
+    return () => mediaQuery.removeEventListener('change', updateMatch)
+  }, [query])
+
+  return matches
 }
 
 interface CommandItemProps {
