@@ -6,7 +6,6 @@ export const GET = async () => {
   const urls = [
     '/',
     '/projects',
-    '/dashboard',
     '/writing',
     ...posts.map(post => `/writing/${post.id}`)
   ]

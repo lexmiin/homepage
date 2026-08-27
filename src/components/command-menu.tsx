@@ -9,7 +9,6 @@ import {
   ProjectIcon,
   SunIcon,
   SystemIcon,
-  DashboardIcon,
   WritingIcon
 } from './icons'
 import { commandState } from '@/states/command-menu'
@@ -51,11 +50,6 @@ const CommandMenu: React.FC = () => {
     () => [
       { name: 'Home', icon: <HomeIcon />, cb: navigate('/') },
       { name: 'Projects', icon: <ProjectIcon />, cb: navigate('/projects') },
-      {
-        name: 'Dashboard',
-        icon: <DashboardIcon />,
-        cb: navigate('/dashboard')
-      },
       { name: 'Writing', icon: <WritingIcon />, cb: navigate('/writing') }
     ],
     []
