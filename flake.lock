@@ -1,5 +1,23 @@
 {
   "nodes": {
+    "aube": {
+      "inputs": {
+        "nixpkgs": "nixpkgs"
+      },
+      "locked": {
+        "lastModified": 1787728038,
+        "narHash": "sha256-tF5cZJ2QzG9D+BzFj+rdjL8rK8ib8zB8UCHBwX3bSfY=",
+        "owner": "lexmiin",
+        "repo": "aube-nix",
+        "rev": "d257390282c8c19c9240148448672d2a6f742ef9",
+        "type": "github"
+      },
+      "original": {
+        "owner": "lexmiin",
+        "repo": "aube-nix",
+        "type": "github"
+      }
+    },
     "flake-utils": {
       "inputs": {
         "systems": "systems"
@@ -20,7 +38,7 @@
     },
     "fnox": {
       "inputs": {
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": "nixpkgs_2"
       },
       "locked": {
         "lastModified": 1783677281,
@@ -54,6 +72,22 @@
     },
     "nixpkgs_2": {
       "locked": {
+        "lastModified": 1782760764,
+        "narHash": "sha256-N66fYdUuZ9hpdM7jsQ7CUWtLJduqGDyTGCaLR62CXaQ=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "7a1a64774a5fd0b0cd39ac95d0e170ace8b266a0",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixpkgs-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_3": {
+      "locked": {
         "lastModified": 1787853275,
         "narHash": "sha256-rc3v0GsDh+W+PrdkUiIT0sB7cu075GA+wNw7OzkEmpQ=",
         "owner": "NixOS",
@@ -70,9 +104,10 @@
     },
     "root": {
       "inputs": {
+        "aube": "aube",
         "flake-utils": "flake-utils",
         "fnox": "fnox",
-        "nixpkgs": "nixpkgs_2"
+        "nixpkgs": "nixpkgs_3"
       }
     },
     "systems": {

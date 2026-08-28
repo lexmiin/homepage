@@ -5,6 +5,7 @@
     nixpkgs.url = "github:NixOS/nixpkgs/release-26.05";
     flake-utils.url = "github:numtide/flake-utils";
     fnox.url = "github:lexmiin/fnox-nix";
+    aube.url = "github:lexmiin/aube-nix";
   };
 
   outputs = {
@@ -12,6 +13,7 @@
     nixpkgs,
     flake-utils,
     fnox,
+    aube,
   }:
     {
       overlays.default = final: prev: {
@@ -26,6 +28,7 @@
           overlays = [
             self.overlays.default
             fnox.overlays.default
+            aube.overlays.default
           ];
         };
       in {
@@ -36,6 +39,7 @@
             pkgs.nodejs
             pkgs.pnpm
             pkgs.fnox
+            pkgs.aube
           ];
         };
       }
