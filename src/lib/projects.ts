@@ -1,39 +1,27 @@
 export const projects = [
   {
-    name: 'Goship',
+    name: 'evocomp',
+    description: 'Python library for evolutionary algorithms',
+    href: 'https://github.com/lexmiin/evocomp',
+    year: 2026
+  },
+  {
+    name: 'faino',
     description: 'Tool to simplify deployment, rollback and server setup',
-    href: 'https://github.com/lexmiin/go-ship',
+    href: 'https://github.com/lexmiin/faino',
     year: 2024
   },
   {
-    name: 'Babyn Yar',
+    name: 'babyn yar',
     description:
       'Government project in memory of the victims of the Babyn Yar tragedy',
     href: 'https://babynyar.gov.ua',
     year: 2023
   },
   {
-    name: 'acro',
-    description: 'Explore stunning architecture projects worldwide',
-    href: 'https://acro.lexunix.me',
-    year: 2023
-  },
-  {
-    name: 'Shelf',
-    description: 'App for tracking reading goals',
-    href: 'https://shelf.lexunix.me',
-    year: 2023
-  },
-  {
-    name: 'Pravda',
-    description: 'Ukrainian news extension for Raycast',
-    href: 'https://github.com/lexmiin/pravda-extension',
-    year: 2022
-  },
-  {
-    name: 'Mariner',
+    name: 'mariner',
     description: 'Website for luxury yachts and apartments in Croatia',
-    href: 'https://www.marinercroatia.net',
+    href: 'https://marinerworldwide.com/',
     year: 2022
   }
 ]
