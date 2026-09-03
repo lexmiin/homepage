@@ -1,5 +1,6 @@
 ---
 import '@/styles/globals.css'
+import { getCollection } from 'astro:content'
 import Navbar from '../components/navbar'
 import CommandMenu from '../components/command-menu'
 
@@ -23,6 +24,13 @@ const canonical = new URL(
   Astro.site ?? 'https://lexunix.me'
 )
 const metaImage = new URL(image, Astro.site ?? 'https://lexunix.me')
+const writingPages = (await getCollection('blog'))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .map(post => ({
+    title: post.data.title,
+    description: post.data.description,
+    slug: post.id
+  }))
 ---
 
 <!doctype html>
@@ -87,7 +95,7 @@ const metaImage = new URL(image, Astro.site ?? 'https://lexunix.me')
   </head>
   <body>
     <Navbar client:load />
-    <CommandMenu client:load />
+    <CommandMenu writingPages={writingPages} client:load />
     <main class="mx-auto w-full max-w-180 px-4 pt-10"><slot /></main>
   </body>
 </html>

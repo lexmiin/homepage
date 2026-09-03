@@ -49,7 +49,10 @@ export default defineConfig({
   },
   integrations: [react()],
   vite: {
-    plugins: [tailwindcss()]
+    plugins: [tailwindcss()],
+    server: {
+      allowedHosts: ['.e2b.app']
+    }
   },
   output: 'server',
   adapter: vercel({

@@ -414,6 +414,11 @@
     content-visibility: auto;
   }
 
+  .command-item__end {
+    display: inline-flex;
+    margin-left: auto;
+  }
+
   [cmdk-item][aria-selected='true'] {
     background: var(--color-surface-4);
     color: var(--color-foreground);
