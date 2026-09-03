@@ -2,6 +2,8 @@ import { Command } from 'cmdk'
 import { useAtom } from 'jotai'
 import React, { useEffect, useMemo, useState } from 'react'
 import {
+  ChevronRightIcon,
+  DocumentIcon,
   EmailIcon,
   GitHubIcon,
   HomeIcon,
@@ -24,6 +26,17 @@ const navigate = (url: string) => () => {
 }
 
 type Theme = 'light' | 'dark'
+type Page = 'writing' | null
+
+interface WritingPage {
+  title: string
+  description: string
+  slug: string
+}
+
+interface CommandMenuProps {
+  writingPages: WritingPage[]
+}
 
 const getSystemTheme = (): Theme =>
   window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
@@ -32,10 +45,13 @@ const applyTheme = (theme: Theme) => {
   document.documentElement.classList.toggle('dark', theme === 'dark')
 }
 
-const CommandMenu: React.FC = () => {
+const CommandMenu: React.FC<CommandMenuProps> = ({ writingPages }) => {
   const [isOpen, setIsOpen] = useAtom(commandState)
   const [theme, setThemeState] = useState<Theme>('light')
   const [isInputTabbable, setIsInputTabbable] = useState(false)
+  const [page, setPage] = useState<Page>(null)
+  const [search, setSearch] = useState('')
+  const [selectedItem, setSelectedItem] = useState('Home')
   const shouldAutoFocusInput = useMediaQuery(KEYBOARD_ORIENTED_DEVICE_QUERY)
 
   useEffect(() => {
@@ -55,8 +71,7 @@ const CommandMenu: React.FC = () => {
   const pages = useMemo(
     () => [
       { name: 'Home', icon: <HomeIcon />, cb: navigate('/') },
-      { name: 'Projects', icon: <ProjectIcon />, cb: navigate('/projects') },
-      { name: 'Writing', icon: <WritingIcon />, cb: navigate('/writing') }
+      { name: 'Projects', icon: <ProjectIcon />, cb: navigate('/projects') }
     ],
     []
   )
@@ -79,6 +94,54 @@ const CommandMenu: React.FC = () => {
 
   const toggleTheme = () => setTheme(theme === 'light' ? 'dark' : 'light')
   const handleItemClick = () => setIsOpen(false)
+  const openWriting = () => {
+    setSearch('')
+    setSelectedItem('All writing')
+    setPage('writing')
+  }
+  const goBack = () => {
+    setSearch('')
+    setSelectedItem('Home')
+    setPage(null)
+  }
+  const handleOpenChange = (open: boolean) => {
+    if (!open && page) {
+      goBack()
+      return
+    }
+
+    setIsOpen(open)
+    if (!open) {
+      setPage(null)
+      setSearch('')
+      setSelectedItem('Home')
+    }
+  }
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (
+      page &&
+      (event.key === 'ArrowLeft' ||
+        event.key === 'Escape' ||
+        (event.key === 'Backspace' && !search))
+    ) {
+      event.preventDefault()
+      goBack()
+      return
+    }
+
+    const selectedItem = event.currentTarget.querySelector<HTMLElement>(
+      '[cmdk-item][aria-selected="true"]'
+    )
+    if (
+      !page &&
+      event.key === 'ArrowRight' &&
+      selectedItem?.dataset.page === 'writing'
+    ) {
+      event.preventDefault()
+      openWriting()
+    }
+  }
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -86,7 +149,6 @@ const CommandMenu: React.FC = () => {
         e.preventDefault()
         setIsOpen(open => !open)
       }
-      if (e.key === 'Enter') setIsOpen(false)
     }
     document.addEventListener('keydown', down)
     return () => document.removeEventListener('keydown', down)
@@ -107,15 +169,24 @@ const CommandMenu: React.FC = () => {
   }, [isOpen, shouldAutoFocusInput])
 
   return (
-    <Command.Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Command.Dialog
+      open={isOpen}
+      onOpenChange={handleOpenChange}
+      onKeyDown={handleKeyDown}
+      label="Command menu"
+      value={selectedItem}
+      onValueChange={setSelectedItem}
+    >
       <div className="command-input">
         <Command.Input
           placeholder="Search"
           tabIndex={shouldAutoFocusInput || isInputTabbable ? 0 : -1}
+          value={search}
+          onValueChange={setSearch}
         />
         <button
           className="command-input__button"
-          onClick={() => setIsOpen(false)}
+          onClick={() => (page ? goBack() : handleOpenChange(false))}
         >
           <kbd className="command-input__kdb">esc</kbd>
         </button>
@@ -123,38 +194,102 @@ const CommandMenu: React.FC = () => {
       <Command.Separator />
       <Command.List>
         <Command.Empty>No results found.</Command.Empty>
-        <Command.Group heading="Page">
-          {pages.map(page => (
-            <CommandItem key={page.name} {...page} onClick={handleItemClick} />
-          ))}
-        </Command.Group>
-        <Command.Group heading="Socials">
-          {socials.map(social => (
-            <CommandItem
-              key={social.name}
-              {...social}
-              onClick={handleItemClick}
+        {!page && (
+          <>
+            <Command.Group heading="Page">
+              {pages.map(page => (
+                <CommandItem
+                  key={page.name}
+                  {...page}
+                  onClick={handleItemClick}
+                />
+              ))}
+              <Command.Item
+                value="Writing"
+                aria-label="Writing"
+                data-page="writing"
+                onSelect={openWriting}
+                onClick={openWriting}
+              >
+                <WritingIcon /> Writing
+                <span className="command-item__end">
+                  <ChevronRightIcon />
+                </span>
+              </Command.Item>
+            </Command.Group>
+            {search && (
+              <WritingItems
+                writingPages={writingPages}
+                onSelect={handleItemClick}
+              />
+            )}
+            <Command.Group heading="Socials">
+              {socials.map(social => (
+                <CommandItem
+                  key={social.name}
+                  {...social}
+                  onClick={handleItemClick}
+                />
+              ))}
+            </Command.Group>
+            <Command.Group heading="Theme">
+              <CommandItem
+                name={`Change Theme to ${theme === 'light' ? 'Dark' : 'Light'}`}
+                icon={theme === 'light' ? <MoonIcon /> : <SunIcon />}
+                cb={toggleTheme}
+                onClick={handleItemClick}
+              />
+              <CommandItem
+                name="Change Theme to System"
+                icon={<SystemIcon />}
+                cb={() => setTheme(getSystemTheme(), false)}
+                onClick={handleItemClick}
+              />
+            </Command.Group>
+          </>
+        )}
+        {page === 'writing' && (
+          <>
+            <Command.Group heading="Writing">
+              <CommandItem
+                name="All writing"
+                icon={<WritingIcon />}
+                cb={navigate('/writing')}
+                onClick={handleItemClick}
+              />
+            </Command.Group>
+            <WritingItems
+              writingPages={writingPages}
+              onSelect={handleItemClick}
             />
-          ))}
-        </Command.Group>
-        <Command.Group heading="Theme">
-          <CommandItem
-            name={`Change Theme to ${theme === 'light' ? 'Dark' : 'Light'}`}
-            icon={theme === 'light' ? <MoonIcon /> : <SunIcon />}
-            cb={toggleTheme}
-            onClick={handleItemClick}
-          />
-          <CommandItem
-            name="Change Theme to System"
-            icon={<SystemIcon />}
-            cb={() => setTheme(getSystemTheme(), false)}
-            onClick={handleItemClick}
-          />
-        </Command.Group>
+          </>
+        )}
       </Command.List>
     </Command.Dialog>
   )
 }
+
+const WritingItems: React.FC<{
+  writingPages: WritingPage[]
+  onSelect: () => void
+}> = ({ writingPages, onSelect }) => (
+  <Command.Group heading="Articles">
+    {writingPages.map(post => (
+      <Command.Item
+        key={post.slug}
+        value={post.title}
+        aria-label={post.title}
+        keywords={[post.description]}
+        onSelect={() => {
+          navigate(`/writing/${post.slug}`)()
+          onSelect()
+        }}
+      >
+        <DocumentIcon /> {post.title}
+      </Command.Item>
+    ))}
+  </Command.Group>
+)
 
 const useMediaQuery = (query: string) => {
   const [matches, setMatches] = useState(false)
@@ -192,6 +327,7 @@ const CommandItem: React.FC<CommandItemProps> = ({
       onSelect={handleSelectAndClick}
       onClick={handleSelectAndClick}
       value={name}
+      aria-label={name}
     >
       {icon} {name}
     </Command.Item>
