@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+step() {
+  local label="$1"
+  shift
+  local started=$SECONDS
+
+  printf '\n==> %s\n' "$label"
+  "$@"
+  printf '<== %s (%ss)\n' "$label" "$((SECONDS - started))"
+}
+
+install_nix() {
+  curl -fsSL https://nixos.org/nix/install |
+    sh -s -- --no-daemon --yes --no-channel-add
+}
+
+if [[ ! -x "$HOME/.nix-profile/bin/nix" ]]; then
+  step "Install Nix" install_nix
+fi
+
+# The installer cannot update the environment of this running script.
+# shellcheck disable=SC1091
+source "$HOME/.nix-profile/etc/profile.d/nix.sh"
+
+mkdir -p "$HOME/.config/nix"
+if ! grep -Eq '^experimental-features[[:space:]]*=.*\bflakes\b' "$HOME/.config/nix/nix.conf" 2>/dev/null; then
+  printf '%s\n' 'experimental-features = nix-command flakes' >> "$HOME/.config/nix/nix.conf"
+fi
+
+repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+profile_marker="# homepage Nix development shell"
+if ! grep -Fqx "$profile_marker" "$HOME/.bash_profile" 2>/dev/null; then
+  cat >> "$HOME/.bash_profile" <<EOF
+
+$profile_marker
+if [[ -z "\${IN_NIX_SHELL:-}" && "\${PWD}" == "$repo_root" ]]; then
+  eval "\$("$HOME/.nix-profile/bin/nix" print-dev-env "$repo_root")"
+fi
+EOF
+fi
+
+load_dev_shell() {
+  eval "$(nix print-dev-env "$repo_root")"
+}
+
+step "Realize the locked Nix development shell" load_dev_shell
+step "Install JavaScript dependencies" pnpm install --frozen-lockfile
