@@ -437,8 +437,13 @@
     max-height: 392px;
     overflow: auto;
     overscroll-behavior: contain;
+    scrollbar-width: none;
     padding: 0 8px 20px;
     transition: height 100ms ease;
+  }
+
+  [cmdk-list]::-webkit-scrollbar {
+    display: none;
   }
 
   [cmdk-separator] {
