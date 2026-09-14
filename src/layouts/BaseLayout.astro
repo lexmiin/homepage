@@ -2,7 +2,6 @@
 import '@/styles/globals.css'
 import { getCollection } from 'astro:content'
 import Analytics from '@vercel/analytics/astro'
-import Navbar from '../components/navbar'
 import CommandMenu from '../components/command-menu'
 
 interface Props {
@@ -96,7 +95,6 @@ const writingPages = (await getCollection('blog'))
     </script>
   </head>
   <body>
-    <Navbar client:load />
     <CommandMenu writingPages={writingPages} client:load />
     <main class="mx-auto w-full max-w-180 px-4 pt-10"><slot /></main>
   </body>

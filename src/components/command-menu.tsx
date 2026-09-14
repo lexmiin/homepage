@@ -1,8 +1,8 @@
 import { Command } from 'cmdk'
-import { useAtom } from 'jotai'
 import React, { useEffect, useMemo, useState } from 'react'
 import {
   ChevronRightIcon,
+  CommandIcon,
   DocumentIcon,
   EmailIcon,
   GitHubIcon,
@@ -13,7 +13,6 @@ import {
   SystemIcon,
   WritingIcon
 } from './icons'
-import { commandState } from '@/states/command-menu'
 
 // Browsers do not expose physical-keyboard presence. A fine, hover-capable
 // primary pointer is the closest capability-based proxy for PCs and laptops.
@@ -46,7 +45,7 @@ const applyTheme = (theme: Theme) => {
 }
 
 const CommandMenu: React.FC<CommandMenuProps> = ({ writingPages }) => {
-  const [isOpen, setIsOpen] = useAtom(commandState)
+  const [isOpen, setIsOpen] = useState(false)
   const [theme, setThemeState] = useState<Theme>('light')
   const [isInputTabbable, setIsInputTabbable] = useState(false)
   const [page, setPage] = useState<Page>(null)
@@ -169,103 +168,114 @@ const CommandMenu: React.FC<CommandMenuProps> = ({ writingPages }) => {
   }, [isOpen, shouldAutoFocusInput])
 
   return (
-    <Command.Dialog
-      open={isOpen}
-      onOpenChange={handleOpenChange}
-      onKeyDown={handleKeyDown}
-      label="Command menu"
-      value={selectedItem}
-      onValueChange={setSelectedItem}
-    >
-      <div className="command-input">
-        <Command.Input
-          placeholder="Search"
-          tabIndex={shouldAutoFocusInput || isInputTabbable ? 0 : -1}
-          value={search}
-          onValueChange={setSearch}
-        />
+    <>
+      <div className="mx-auto flex w-full max-w-180 justify-end px-4 pt-6">
         <button
-          className="command-input__button"
-          onClick={() => (page ? goBack() : handleOpenChange(false))}
+          aria-label="Menu"
+          className="inline-flex size-12 cursor-pointer items-center justify-center rounded-[10px] bg-transparent focus:outline-none motion-safe:pointer-fine:transition-[background-color,box-shadow] motion-safe:pointer-fine:duration-200 pointer-fine:hover:bg-accent pointer-fine:active:ring-3 pointer-fine:active:ring-ring [&_svg_path]:fill-foreground"
+          onClick={() => setIsOpen(open => !open)}
         >
-          <kbd className="command-input__kdb">esc</kbd>
+          <CommandIcon />
         </button>
       </div>
-      <Command.Separator />
-      <Command.List>
-        <Command.Empty>No results found.</Command.Empty>
-        {!page && (
-          <>
-            <Command.Group heading="Page">
-              {pages.map(page => (
+      <Command.Dialog
+        open={isOpen}
+        onOpenChange={handleOpenChange}
+        onKeyDown={handleKeyDown}
+        label="Command menu"
+        value={selectedItem}
+        onValueChange={setSelectedItem}
+      >
+        <div className="command-input">
+          <Command.Input
+            placeholder="Search"
+            tabIndex={shouldAutoFocusInput || isInputTabbable ? 0 : -1}
+            value={search}
+            onValueChange={setSearch}
+          />
+          <button
+            className="command-input__button"
+            onClick={() => (page ? goBack() : handleOpenChange(false))}
+          >
+            <kbd className="command-input__kdb">esc</kbd>
+          </button>
+        </div>
+        <Command.Separator />
+        <Command.List>
+          <Command.Empty>No results found.</Command.Empty>
+          {!page && (
+            <>
+              <Command.Group heading="Page">
+                {pages.map(page => (
+                  <CommandItem
+                    key={page.name}
+                    {...page}
+                    onClick={handleItemClick}
+                  />
+                ))}
+                <Command.Item
+                  value="Writing"
+                  aria-label="Writing"
+                  data-page="writing"
+                  onSelect={openWriting}
+                  onClick={openWriting}
+                >
+                  <WritingIcon /> Writing
+                  <span className="command-item__end">
+                    <ChevronRightIcon />
+                  </span>
+                </Command.Item>
+              </Command.Group>
+              {search && (
+                <WritingItems
+                  writingPages={writingPages}
+                  onSelect={handleItemClick}
+                />
+              )}
+              <Command.Group heading="Socials">
+                {socials.map(social => (
+                  <CommandItem
+                    key={social.name}
+                    {...social}
+                    onClick={handleItemClick}
+                  />
+                ))}
+              </Command.Group>
+              <Command.Group heading="Theme">
                 <CommandItem
-                  key={page.name}
-                  {...page}
+                  name={`Change Theme to ${theme === 'light' ? 'Dark' : 'Light'}`}
+                  icon={theme === 'light' ? <MoonIcon /> : <SunIcon />}
+                  cb={toggleTheme}
                   onClick={handleItemClick}
                 />
-              ))}
-              <Command.Item
-                value="Writing"
-                aria-label="Writing"
-                data-page="writing"
-                onSelect={openWriting}
-                onClick={openWriting}
-              >
-                <WritingIcon /> Writing
-                <span className="command-item__end">
-                  <ChevronRightIcon />
-                </span>
-              </Command.Item>
-            </Command.Group>
-            {search && (
+                <CommandItem
+                  name="Change Theme to System"
+                  icon={<SystemIcon />}
+                  cb={() => setTheme(getSystemTheme(), false)}
+                  onClick={handleItemClick}
+                />
+              </Command.Group>
+            </>
+          )}
+          {page === 'writing' && (
+            <>
+              <Command.Group heading="Writing">
+                <CommandItem
+                  name="All writing"
+                  icon={<WritingIcon />}
+                  cb={navigate('/writing')}
+                  onClick={handleItemClick}
+                />
+              </Command.Group>
               <WritingItems
                 writingPages={writingPages}
                 onSelect={handleItemClick}
               />
-            )}
-            <Command.Group heading="Socials">
-              {socials.map(social => (
-                <CommandItem
-                  key={social.name}
-                  {...social}
-                  onClick={handleItemClick}
-                />
-              ))}
-            </Command.Group>
-            <Command.Group heading="Theme">
-              <CommandItem
-                name={`Change Theme to ${theme === 'light' ? 'Dark' : 'Light'}`}
-                icon={theme === 'light' ? <MoonIcon /> : <SunIcon />}
-                cb={toggleTheme}
-                onClick={handleItemClick}
-              />
-              <CommandItem
-                name="Change Theme to System"
-                icon={<SystemIcon />}
-                cb={() => setTheme(getSystemTheme(), false)}
-                onClick={handleItemClick}
-              />
-            </Command.Group>
-          </>
-        )}
-        {page === 'writing' && (
-          <>
-            <Command.Group heading="Writing">
-              <CommandItem
-                name="All writing"
-                icon={<WritingIcon />}
-                cb={navigate('/writing')}
-                onClick={handleItemClick}
-              />
-            </Command.Group>
-            <WritingItems
-              writingPages={writingPages}
-              onSelect={handleItemClick}
-            />
-          </>
-        )}
-      </Command.List>
-    </Command.Dialog>
+            </>
+          )}
+        </Command.List>
+      </Command.Dialog>
+    </>
   )
 }
 
