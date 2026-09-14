@@ -211,12 +211,6 @@
     height: auto;
   }
 
-  .post > p > img {
-    margin-top: 16px;
-    margin-bottom: 16px;
-    border-radius: 4px;
-  }
-
   .post code {
     font-size: 14px;
   }

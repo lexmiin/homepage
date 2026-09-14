@@ -1,0 +1,377 @@
+---
+import { Image } from 'astro:assets'
+import type { ImageMetadata } from 'astro'
+
+interface Props {
+  src: ImageMetadata
+  alt: string
+}
+
+const { src, alt } = Astro.props
+---
+
+<div data-image-viewer>
+  <span class="relative my-4 block w-fit max-w-full">
+    <Image
+      class="block h-auto max-w-full rounded"
+      src={src}
+      alt={alt}
+      data-image-viewer-thumbnail
+    />
+    <button
+      class="image-expand-button absolute top-[9px] right-[9px] grid size-8 cursor-pointer place-items-center rounded border border-surface-6 bg-surface-2 text-surface-11 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-link"
+      type="button"
+      data-image-expand
+    >
+      <svg
+        class="size-4"
+        aria-hidden="true"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path
+          d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M8 21H5a2 2 0 0 1-2-2v-3M16 21h3a2 2 0 0 0 2-2v-3"
+        ></path>
+      </svg>
+      <span class="sr-only">View {alt} fullscreen</span>
+    </button>
+  </span>
+
+  <dialog
+    class="m-0 h-dvh max-h-none w-screen max-w-none overflow-hidden border-0 bg-background p-0 text-foreground backdrop:bg-overlay"
+    aria-label="Fullscreen image viewer"
+    data-image-lightbox
+  >
+    <div class="absolute inset-0 overflow-hidden" data-image-lightbox-viewport>
+      <img
+        class="absolute max-w-none origin-top-left cursor-zoom-in touch-none select-none will-change-transform data-[dragging=true]:cursor-grabbing"
+        data-image-lightbox-image
+        alt=""
+        draggable="false"
+      />
+    </div>
+
+    <button
+      class="fixed top-[9px] right-[9px] z-10 grid size-8 cursor-pointer place-items-center rounded border border-surface-6 bg-surface-2 text-surface-11 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-link"
+      type="button"
+      data-image-lightbox-close
+    >
+      <svg
+        class="size-4"
+        aria-hidden="true"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+      >
+        <path d="m6 6 12 12M18 6 6 18"></path>
+      </svg>
+      <span class="sr-only">Close fullscreen image</span>
+    </button>
+
+    <div
+      class="fixed bottom-5 left-1/2 z-10 flex -translate-x-1/2 overflow-hidden rounded border border-surface-6 bg-surface-2 [&>button+button]:border-l [&>button+button]:border-surface-6"
+    >
+      <button
+        class="h-8 min-w-9 cursor-pointer px-2.5 text-surface-11 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-link disabled:cursor-default disabled:opacity-[0.45]"
+        type="button"
+        data-image-lightbox-zoom-out
+      >
+        <span aria-hidden="true">−</span>
+        <span class="sr-only">Zoom out</span>
+      </button>
+      <button
+        class="h-8 min-w-16 cursor-pointer px-2.5 text-xs text-surface-11 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-link"
+        type="button"
+        data-image-lightbox-reset
+      >
+        <span data-image-lightbox-scale>100%</span>
+        <span class="sr-only">Reset zoom</span>
+      </button>
+      <button
+        class="h-8 min-w-9 cursor-pointer px-2.5 text-surface-11 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-link"
+        type="button"
+        data-image-lightbox-zoom-in
+      >
+        <span aria-hidden="true">+</span>
+        <span class="sr-only">Zoom in</span>
+      </button>
+    </div>
+
+    <p
+      class="fixed bottom-[58px] left-1/2 z-10 -translate-x-1/2 text-xs whitespace-nowrap text-muted-foreground"
+    >
+      <span class="[@media(pointer:coarse)]:hidden">Scroll to zoom</span>
+      <span class="hidden [@media(pointer:coarse)]:inline"
+        >Double tap to zoom</span
+      >
+      · Drag to pan
+    </p>
+  </dialog>
+</div>
+
+<script>
+  const clamp = (value: number, minimum: number, maximum: number) =>
+    Math.min(Math.max(value, minimum), maximum)
+
+  document
+    .querySelectorAll<HTMLElement>('[data-image-viewer]')
+    .forEach(viewer => {
+      if (viewer.dataset.initialized) return
+      viewer.dataset.initialized = 'true'
+
+      const thumbnail = viewer.querySelector<HTMLImageElement>(
+        '[data-image-viewer-thumbnail]'
+      )
+      const expandButton = viewer.querySelector<HTMLButtonElement>(
+        '[data-image-expand]'
+      )
+      const dialog = viewer.querySelector<HTMLDialogElement>(
+        '[data-image-lightbox]'
+      )
+      const viewport = viewer.querySelector<HTMLElement>(
+        '[data-image-lightbox-viewport]'
+      )
+      const fullscreenImage = viewer.querySelector<HTMLImageElement>(
+        '[data-image-lightbox-image]'
+      )
+      const closeButton = viewer.querySelector<HTMLButtonElement>(
+        '[data-image-lightbox-close]'
+      )
+      const zoomInButton = viewer.querySelector<HTMLButtonElement>(
+        '[data-image-lightbox-zoom-in]'
+      )
+      const zoomOutButton = viewer.querySelector<HTMLButtonElement>(
+        '[data-image-lightbox-zoom-out]'
+      )
+      const resetButton = viewer.querySelector<HTMLButtonElement>(
+        '[data-image-lightbox-reset]'
+      )
+      const scaleLabel = viewer.querySelector<HTMLElement>(
+        '[data-image-lightbox-scale]'
+      )
+
+      if (
+        !thumbnail ||
+        !expandButton ||
+        !dialog ||
+        !viewport ||
+        !fullscreenImage ||
+        !closeButton ||
+        !zoomInButton ||
+        !zoomOutButton ||
+        !resetButton ||
+        !scaleLabel
+      )
+        return
+
+      let scale = 1
+      let x = 0
+      let y = 0
+      let fittedWidth = 0
+      let fittedHeight = 0
+      let previousBodyOverflow = ''
+      let dragPointer: number | undefined
+      let previousPointerX = 0
+      let previousPointerY = 0
+      let touchStart:
+        { pointerId: number; x: number; y: number; moved: boolean } | undefined
+      let lastTap = { time: 0, x: 0, y: 0 }
+      let lastTouchDoubleTap = 0
+
+      const renderTransform = () => {
+        fullscreenImage.style.transform = `translate3d(${x}px, ${y}px, 0) scale(${scale})`
+        scaleLabel.textContent = `${Math.round(scale * 100)}%`
+        zoomOutButton.disabled = scale === 1
+      }
+
+      const resetView = () => {
+        if (!fullscreenImage.naturalWidth || !fullscreenImage.naturalHeight)
+          return
+
+        const availableWidth = Math.max(viewport.clientWidth - 32, 1)
+        const availableHeight = Math.max(viewport.clientHeight - 32, 1)
+        const fit = Math.min(
+          availableWidth / fullscreenImage.naturalWidth,
+          availableHeight / fullscreenImage.naturalHeight,
+          1
+        )
+
+        fittedWidth = fullscreenImage.naturalWidth * fit
+        fittedHeight = fullscreenImage.naturalHeight * fit
+        fullscreenImage.style.width = `${fittedWidth}px`
+        fullscreenImage.style.height = `${fittedHeight}px`
+        scale = 1
+        x = (viewport.clientWidth - fittedWidth) / 2
+        y = (viewport.clientHeight - fittedHeight) / 2
+        renderTransform()
+      }
+
+      const zoomAt = (nextScale: number, pointX: number, pointY: number) => {
+        const boundedScale = clamp(nextScale, 1, 8)
+
+        if (boundedScale === 1) {
+          resetView()
+          return
+        }
+
+        const ratio = boundedScale / scale
+        x = pointX - (pointX - x) * ratio
+        y = pointY - (pointY - y) * ratio
+        scale = boundedScale
+        renderTransform()
+      }
+
+      const zoomFromCenter = (factor: number) =>
+        zoomAt(
+          scale * factor,
+          viewport.clientWidth / 2,
+          viewport.clientHeight / 2
+        )
+
+      const openImage = () => {
+        fullscreenImage.alt = thumbnail.alt
+        fullscreenImage.src = thumbnail.currentSrc || thumbnail.src
+        previousBodyOverflow = document.body.style.overflow
+        document.body.style.overflow = 'hidden'
+        dialog.showModal()
+
+        if (fullscreenImage.complete) resetView()
+      }
+
+      fullscreenImage.addEventListener('load', resetView)
+      expandButton.addEventListener('click', openImage)
+      closeButton.addEventListener('click', () => dialog.close())
+      resetButton.addEventListener('click', resetView)
+      zoomInButton.addEventListener('click', () => zoomFromCenter(1.5))
+      zoomOutButton.addEventListener('click', () => zoomFromCenter(1 / 1.5))
+
+      viewport.addEventListener(
+        'wheel',
+        event => {
+          event.preventDefault()
+          const bounds = viewport.getBoundingClientRect()
+          const factor = Math.exp(-event.deltaY * 0.002)
+          zoomAt(
+            scale * factor,
+            event.clientX - bounds.left,
+            event.clientY - bounds.top
+          )
+        },
+        { passive: false }
+      )
+
+      fullscreenImage.addEventListener('dblclick', event => {
+        if (performance.now() - lastTouchDoubleTap < 500) return
+
+        const bounds = viewport.getBoundingClientRect()
+        zoomAt(
+          scale === 1 ? 2 : 1,
+          event.clientX - bounds.left,
+          event.clientY - bounds.top
+        )
+      })
+
+      fullscreenImage.addEventListener('pointerdown', event => {
+        if (event.pointerType !== 'mouse') {
+          touchStart = {
+            pointerId: event.pointerId,
+            x: event.clientX,
+            y: event.clientY,
+            moved: false
+          }
+        }
+
+        if (scale === 1) return
+        dragPointer = event.pointerId
+        previousPointerX = event.clientX
+        previousPointerY = event.clientY
+        fullscreenImage.setPointerCapture(event.pointerId)
+        fullscreenImage.dataset.dragging = 'true'
+      })
+
+      fullscreenImage.addEventListener('pointermove', event => {
+        if (
+          event.pointerId === touchStart?.pointerId &&
+          Math.hypot(
+            event.clientX - touchStart.x,
+            event.clientY - touchStart.y
+          ) > 10
+        )
+          touchStart.moved = true
+
+        if (event.pointerId !== dragPointer) return
+        x += event.clientX - previousPointerX
+        y += event.clientY - previousPointerY
+        previousPointerX = event.clientX
+        previousPointerY = event.clientY
+        renderTransform()
+      })
+
+      fullscreenImage.addEventListener('pointerup', event => {
+        if (event.pointerId === touchStart?.pointerId && !touchStart.moved) {
+          const now = performance.now()
+          const isDoubleTap =
+            now - lastTap.time < 350 &&
+            Math.hypot(event.clientX - lastTap.x, event.clientY - lastTap.y) <
+              32
+
+          if (isDoubleTap) {
+            const bounds = viewport.getBoundingClientRect()
+            zoomAt(
+              scale === 1 ? 2 : 1,
+              event.clientX - bounds.left,
+              event.clientY - bounds.top
+            )
+            lastTap.time = 0
+            lastTouchDoubleTap = now
+          } else {
+            lastTap = {
+              time: now,
+              x: event.clientX,
+              y: event.clientY
+            }
+          }
+        }
+
+        touchStart = undefined
+
+        if (event.pointerId === dragPointer) {
+          dragPointer = undefined
+          delete fullscreenImage.dataset.dragging
+        }
+      })
+
+      fullscreenImage.addEventListener('pointercancel', event => {
+        if (event.pointerId === touchStart?.pointerId) touchStart = undefined
+        if (event.pointerId === dragPointer) {
+          dragPointer = undefined
+          delete fullscreenImage.dataset.dragging
+        }
+      })
+
+      dialog.addEventListener('click', event => {
+        if (event.target === viewport) dialog.close()
+      })
+
+      dialog.addEventListener('keydown', event => {
+        if (event.key === '+' || event.key === '=') zoomFromCenter(1.5)
+        if (event.key === '-') zoomFromCenter(1 / 1.5)
+        if (event.key === '0') resetView()
+      })
+
+      dialog.addEventListener('close', () => {
+        document.body.style.overflow = previousBodyOverflow
+        fullscreenImage.removeAttribute('src')
+      })
+
+      new ResizeObserver(() => {
+        if (dialog.open) resetView()
+      }).observe(viewport)
+    })
+</script>

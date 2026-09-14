@@ -4,6 +4,9 @@ description: 'Global optimization based on evolutionary paradigm'
 date: '2022-11-08 19:59'
 ---
 
+import ImageViewer from '../../components/ImageViewer.astro'
+import functionGraph from '../../assets/writing/deformed-stars/function-graph.png'
+
 During my second year in university, I had a course called Introduction to Computational Intelligence, where we studied neural networks and different evolutionary algorithms like [backpropagation](https://en.wikipedia.org/wiki/Backpropagation), [ANFIS](https://en.wikipedia.org/wiki/Adaptive_neuro_fuzzy_inference_system), [ant colony optimization](https://en.wikipedia.org/wiki/Ant_colony_optimization_algorithms), and [genetic algorithm](https://en.wikipedia.org/wiki/Genetic_algorithm). I very much enjoyed the course and wanted to share one of the algorithms I studied.
 
 Our professor ([Vitaliy Snytyuk](https://science.knu.ua/en/researchgroups/research.php?ELEMENT_ID=2545)) showed us the algorithm he developed with one of his colleagues ([Nataliia Tmienova](http://fit.univ.kiev.ua/en/archives/14540)) called [method of deformed stars](https://ieeexplore.ieee.org/document/9239208). It somewhat resembles the [evolution strategy](https://en.wikipedia.org/wiki/Evolution_strategy) used for function optimization. But, using deformed stars guarantees an increase in the rate of convergence. In other words, you would need less time to find the optimum.
@@ -18,7 +21,7 @@ Populations of potential solutions are used to optimize the multivariable functi
 
 I want to show you how to optimize a simpler function. Here is the function and its graph. We want to minimize it on the interval [-5, 5].
 
-![Graph of the function to minimize](../../assets/writing/deformed-stars/function-graph.png)
+<ImageViewer src={functionGraph} alt="Graph of the function to minimize" />
 
 Let's try to minmize it!
 
