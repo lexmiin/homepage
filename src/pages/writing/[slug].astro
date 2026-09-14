@@ -3,6 +3,8 @@ import { getCollection, render } from 'astro:content'
 import { format } from 'date-fns'
 import readingTime from 'reading-time'
 import BaseLayout from '../../layouts/BaseLayout.astro'
+import { Image } from 'astro:assets'
+import profileImage from '@/assets/profile-square.png'
 
 export const prerender = true
 
@@ -29,12 +31,11 @@ const stats = readingTime(post.body ?? '')
     >
       <div class="flex items-center gap-2">
         <div class="flex items-center gap-2">
-          <img
+          <Image
             class="rounded-full select-none"
-            src="/profile-square.png"
-            alt="Profile Image"
-            width="32"
-            height="32"
+            src={profileImage}
+            alt="Alexey Miin"
+            width={32}
           /><span>Alexey Miin</span>
         </div>
         <span>&bull;</span>

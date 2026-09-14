@@ -18,7 +18,7 @@ Populations of potential solutions are used to optimize the multivariable functi
 
 I want to show you how to optimize a simpler function. Here is the function and its graph. We want to minimize it on the interval [-5, 5].
 
-<img src="/writing/deformed-stars/function-graph.png" alt="Function Graph" class="rounded-image" />
+![Graph of the function to minimize](../../assets/writing/deformed-stars/function-graph.png)
 
 Let's try to minmize it!
 

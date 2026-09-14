@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content'
 import BaseLayout from '@/layouts/BaseLayout.astro'
 import { projects } from '@/lib/projects'
 import { Image } from 'astro:assets'
+import profileImage from '@/assets/profile.png'
 
 const posts = (await getCollection('blog'))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
@@ -16,10 +17,9 @@ const homePreviewClass =
   <div class="mb-10 flex items-center gap-4">
     <div class="relative size-16 shrink-0 overflow-hidden rounded-full">
       <Image
-        src="/profile.png"
-        alt="Profile"
-        width="100"
-        height="64"
+        src={profileImage}
+        alt="Alexey Miin"
+        width={128}
         class="size-full object-cover"
         loading="eager"
       />
